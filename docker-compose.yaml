@@ -1,0 +1,47 @@
+version: '3'
+services:
+
+  db:
+    image: postgres
+    volumes:
+      - mahara_db:/var/lib/postgresql/data/
+      - ./conf/postgresql.conf:/etc/postgresql.conf
+    command: -c config_file=/etc/postgresql.conf
+    environment:
+      - POSTGRES_PASSWORD=maharapass
+      - POSTGRES_DB=mahara
+
+  web:
+    build: ./
+    volumes:
+      - mahara:/var/www/html
+      - mahara_data:/opt/dataroot
+      - ./conf/php-fpm.conf:/etc/php/7.0/fpm/php-fpm.conf
+      - ./conf/php.ini:/etc/php/7.0/fpm/php.ini
+    links:
+      - db:dbhost
+
+  nginx-proxy:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./conf/site.conf:/etc/nginx/conf.d/default.conf
+    links:
+      - web
+    depends_on:
+      - web
+
+volumes:
+  mahara:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/alendit/public_html/mahara
+  mahara_data:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/alendit/public_html/mahara_data
+  mahara_db:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /home/alendit/public_html/mahara_db
