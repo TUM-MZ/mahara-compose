@@ -7,6 +7,10 @@ services:
     volumes:
       - mahara_db:/var/lib/postgresql/data/
       - ./conf/postgresql.conf:/etc/postgresql.conf
+      # import db
+      # - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      # - /home/tmteam/mahara/dbdump.sql:/tmp/dbdump.sql
+
     command: -c config_file=/etc/postgresql.conf
     environment:
       - POSTGRES_PASSWORD=maharapass
