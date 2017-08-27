@@ -3,6 +3,7 @@ services:
 
   db:
     image: postgres
+    restart: always
     volumes:
       - mahara_db:/var/lib/postgresql/data/
       - ./conf/postgresql.conf:/etc/postgresql.conf
@@ -13,6 +14,7 @@ services:
 
   web:
     build: ./
+    restart: always
     volumes:
       - mahara:/var/www/html
       - mahara_data:/opt/dataroot
@@ -22,6 +24,7 @@ services:
       - db:dbhost
 
   nginx-proxy:
+    restart: always
     image: nginx:latest
     ports:
       - "8080:80"
