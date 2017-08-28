@@ -2,10 +2,12 @@ version: '3'
 services:
 
   db:
-    image: postgres
+    image: postgres:9.5
     restart: always
     volumes:
       - mahara_db:/var/lib/postgresql/data/
+      - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      - /home/tmteam/mahara/dbdump.sql:/tmp/dbdump.sql
       - ./conf/postgresql.conf:/etc/postgresql.conf
       # import db
       # - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
@@ -13,8 +15,9 @@ services:
 
     command: -c config_file=/etc/postgresql.conf
     environment:
-      - POSTGRES_PASSWORD=maharapass
-      - POSTGRES_DB=mahara
+      - POSTGRES_USER=mahara
+      - POSTGRES_PASSWORD=mahara
+      - POSTGRES_DB=maharadb
 
   web:
     build: ./
@@ -30,8 +33,9 @@ services:
   nginx-proxy:
     restart: always
     image: nginx:latest
+    restart: always
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - mahara:/var/www/html
       - ./conf/site.conf:/etc/nginx/conf.d/default.conf
@@ -44,12 +48,12 @@ volumes:
   mahara:
     driver: local-persist
     driver_opts:
-      mountpoint: /home/alendit/public_html/mahara
+      mountpoint: /home/tmteam/mahara/mahara-src
   mahara_data:
     driver: local-persist
     driver_opts:
-      mountpoint: /home/alendit/public_html/mahara_data
+      mountpoint: /home/tmteam/mahara/mahara-data
   mahara_db:
     driver: local-persist
     driver_opts:
-      mountpoint: /home/alendit/public_html/mahara_db
+      mountpoint: /home/tmteam/mahara/mahara-db
