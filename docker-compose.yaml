@@ -6,8 +6,8 @@ services:
     restart: always
     volumes:
       - mahara_db:/var/lib/postgresql/data/
-      - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
-      - /home/tmteam/mahara/dbdump.sql:/tmp/dbdump.sql
+      #- ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
+      #- /home/tmteam/mahara/dbdump.sql:/tmp/dbdump.sql
       - ./conf/postgresql.conf:/etc/postgresql.conf
       # import db
       # - ./db/init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
@@ -42,6 +42,7 @@ services:
     volumes:
       - mahara:/var/www/html
       - ./conf/site.conf:/etc/nginx/conf.d/default.conf
+      - ./conf/nginx.conf:/etc/nginx/nginx.conf
       - ./cert/mahara-lrz.pem:/etc/ssl/mahara-lrz.pem
       - ./cert/mahara-lrz.key:/etc/ssl/mahara-lrz.key
       - ./cert/mahara-lrz.pass:/etc/ssl/mahara-lrz.pass
